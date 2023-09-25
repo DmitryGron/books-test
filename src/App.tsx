@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setSearchTerm } from './store/reducers/search';
+import HomePage from './pages/HomePage';
+import BookDetailPage from './pages/BookDetailPage';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Retrieve the last search term from localStorage
+    const lastSearchTerm = localStorage.getItem('lastSearchTerm');
+    if (lastSearchTerm) {
+      // Dispatch an action to set the last search term in Redux
+      dispatch(setSearchTerm(lastSearchTerm));
+    }
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/book/:bookId" element={<BookDetailPage />} />
+      </Routes>
+    </Router>
   );
 }
 
